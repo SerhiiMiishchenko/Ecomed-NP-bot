@@ -12,7 +12,7 @@ public class DocumentManagerConfig {
     private final String apiKey;
 
     @Autowired
-    public DocumentManagerConfig(@Value("${config.baseUrl}") String baseUrl, @Value("${config.apiKey}") String apiKey) {
+    public DocumentManagerConfig(@Value("${BASE_URL}") String baseUrl, @Value("${API_KEY}") String apiKey) {
         this.baseUrl = baseUrl;
         this.apiKey = apiKey;
     }
