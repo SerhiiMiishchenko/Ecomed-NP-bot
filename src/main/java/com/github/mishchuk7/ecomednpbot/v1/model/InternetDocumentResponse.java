@@ -1,6 +1,5 @@
 package com.github.mishchuk7.ecomednpbot.v1.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;

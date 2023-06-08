@@ -1,7 +1,6 @@
 package com.github.mishchuk7.ecomednpbot.v1.client;
 
 import com.github.mishchuk7.ecomednpbot.v1.model.InternetDocument;
-import com.github.mishchuk7.ecomednpbot.v1.model.MethodProperties;
 import com.github.mishchuk7.ecomednpbot.v1.model.SearchRequest;
 import com.github.mishchuk7.ecomednpbot.v1.util.SearchRequestUtils;
 import lombok.SneakyThrows;
@@ -9,7 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class InternetDocumentManagerImplTest {
 

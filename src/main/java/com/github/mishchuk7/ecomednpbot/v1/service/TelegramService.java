@@ -34,17 +34,6 @@ public class TelegramService {
         execute(message);
     }
 
-    public void sendMessage(Long chatId, String text, ReplyKeyboard replyKeyboard) {
-        SendMessage sendMessage = SendMessage
-                .builder()
-                .text(text)
-                .chatId(chatId.toString())
-                .parseMode(ParseMode.HTML)
-                .replyMarkup(replyKeyboard)
-                .build();
-        execute(sendMessage);
-    }
-
     private void execute(BotApiMethod botApiMethod) {
         try {
             ecomedNpBotSender.execute(botApiMethod);
