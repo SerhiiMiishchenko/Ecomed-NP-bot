@@ -10,7 +10,7 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 @Component
 public class EcomedNpBotSender extends DefaultAbsSender {
 
-    protected EcomedNpBotSender(@Value("${bot.token}")String botToken) {
+    protected EcomedNpBotSender(@Value("${BOT_TOKEN}")String botToken) {
         super(new DefaultBotOptions(), botToken);
     }
 

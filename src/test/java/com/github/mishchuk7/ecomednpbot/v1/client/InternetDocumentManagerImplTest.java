@@ -16,8 +16,6 @@ class InternetDocumentManagerImplTest {
     private final DocumentManagerConfig documentManagerConfig = new DocumentManagerConfig("baseUrl", "apiKey");
     private final SearchRequest searchRequest = SearchRequestUtils.createSearchRequestInternetDoc("basePhoneNumber", documentManagerConfig);
 
-
-
     @Test
     @SneakyThrows
     void getAllDocumentsList() {
@@ -53,7 +51,7 @@ class InternetDocumentManagerImplTest {
                 .filter(document -> document.getTrackingStatusCode() == 9)
                 .toList();
 
-        assertEquals(new InternetDocumentManagerImpl(documentManagerConfig).getSeatsAmount(receivedParcels), 0.0);
+        assertEquals(new InternetDocumentManagerImpl(documentManagerConfig).getTotalNumberOfSeats(receivedParcels), 0.0);
     }
 
 }

@@ -49,7 +49,6 @@ public class EcomedNpBot extends TelegramLongPollingBot {
         if (!dispatched) {
             log.warn("Unexpected update from user");
         }
-
     }
 
     private Long getUpdateId(Update update) {

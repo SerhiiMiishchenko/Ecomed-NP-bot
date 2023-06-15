@@ -43,7 +43,7 @@ public class TrackingDocument {
     private String payerType;
 
     @JsonProperty("SeatsAmount")
-    private String seatsAmount;
+    private int seatsAmount;
 
     @JsonProperty("ScheduledDeliveryDate")
     private String scheduledDeliveryDate;

@@ -15,6 +15,6 @@ public interface InternetDocumentManager extends DocumentManager<InternetDocumen
 
     int getQuantityOfPallet(List<InternetDocument> internetDocuments);
 
-    int getSeatsAmount(List<InternetDocument> internetDocuments);
+    int getTotalNumberOfSeats(List<InternetDocument> internetDocuments);
 
 }

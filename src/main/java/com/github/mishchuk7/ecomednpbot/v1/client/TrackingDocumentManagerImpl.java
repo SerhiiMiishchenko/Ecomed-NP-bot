@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -22,37 +20,21 @@ public class TrackingDocumentManagerImpl implements TrackingDocumentManager {
     @Override
     public List<TrackingDocument> getAllDocuments(SearchRequest searchRequest) throws IOException, InterruptedException {
         TrackingDocumentResponse trackingDocumentResponse = trackingDocumentResponse(searchRequest);
-        if (!trackingDocumentResponse.getErrors().isEmpty()) {
-            log.warn(trackingDocumentResponse.getErrors().get(0));
-        }
-        if (!trackingDocumentResponse.getWarnings().isEmpty()) {
-            log.warn(trackingDocumentResponse.getWarnings().get(0));
-        }
-        if (!trackingDocumentResponse.getErrorCodes().isEmpty()) {
-            log.warn(trackingDocumentResponse.getErrorCodes().get(0));
-        }
+        logResponseError(trackingDocumentResponse);
         return trackingDocumentResponse(searchRequest).getData();
     }
 
     @Override
     public List<TrackingDocument> getProblemParcels(List<TrackingDocument> documents) {
-        List<TrackingDocument> arrivedParselsList = getArrivedParselsList(documents);
-        List<TrackingDocument> refusedParcelsList = getRefusedParcelsList(documents);
-        if (arrivedParselsList.isEmpty() && refusedParcelsList.isEmpty()) return List.of();
-        LocalDate now = LocalDate.now();
-        arrivedParselsList = arrivedParselsList.stream()
-                .filter(document -> LocalDate.parse(document.getDateCreated(), DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")).isEqual(now.minusDays(7L)))
-                .filter(document -> getDate(document.getDatePayedKeeping()).isBefore(now) || getDate(document.getDatePayedKeeping()).isEqual(now))
+        List<TrackingDocument> overdueParcels = documents.stream()
+                .filter(document -> !document.getStorageAmount().isEmpty())
                 .toList();
-        return refusedParcelsList.isEmpty() ? arrivedParselsList : Stream.concat(arrivedParselsList.stream(), refusedParcelsList.stream()).toList();
+        List<TrackingDocument> refusedParcelsList = getRefusedParcelsList(documents);
+        return Stream.concat(overdueParcels.stream(), refusedParcelsList.stream()).toList();
     }
 
     private TrackingDocumentResponse trackingDocumentResponse(SearchRequest searchRequest) throws IOException, InterruptedException {
         return HttpRequestUtils.post(documentManagerConfig.getBaseUrl(), searchRequest, TrackingDocumentResponse.class);
-    }
-
-    private List<TrackingDocument> getArrivedParselsList(List<TrackingDocument> documents) {
-        return documents.stream().filter(document -> document.getStatusCode() == 7 || document.getStatusCode() == 8).toList();
     }
 
     private List<TrackingDocument> getRefusedParcelsList(List<TrackingDocument> documents) {
@@ -62,8 +44,15 @@ public class TrackingDocumentManagerImpl implements TrackingDocumentManager {
                 .toList();
     }
 
-    private LocalDate getDate(String date) {
-        DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return LocalDate.parse(date, inputFormat);
+    private static void logResponseError(TrackingDocumentResponse trackingDocumentResponse) {
+        if (!trackingDocumentResponse.getErrors().isEmpty()) {
+            log.warn(trackingDocumentResponse.getErrors().get(0));
+        }
+        if (!trackingDocumentResponse.getWarnings().isEmpty()) {
+            log.warn(trackingDocumentResponse.getWarnings().get(0));
+        }
+        if (!trackingDocumentResponse.getErrorCodes().isEmpty()) {
+            log.warn(trackingDocumentResponse.getErrorCodes().get(0));
+        }
     }
 }

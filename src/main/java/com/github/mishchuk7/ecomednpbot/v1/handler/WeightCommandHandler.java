@@ -25,7 +25,7 @@ public class WeightCommandHandler extends UserRequestHandler{
     private static final String command = "/weight";
 
     @Value("${BASE_PHONE_NUMBER}")
-    private static String baseNumber;
+    private String baseNumber;
 
     private final TelegramService telegramService;
     private final DocumentManagerConfig documentManagerConfig;
@@ -50,11 +50,11 @@ public class WeightCommandHandler extends UserRequestHandler{
             List<InternetDocument> internetDocuments = internetDocumentManager.getAllDocuments(searchRequest);
             weight = internetDocumentManager.getTotalWeightOfParcelsAtBranch(internetDocuments);
             pallets = internetDocumentManager.getQuantityOfPallet(internetDocuments);
-            seats = internetDocumentManager.getSeatsAmount(internetDocuments);
+            seats = internetDocumentManager.getTotalNumberOfSeats(internetDocuments);
         } catch (IOException | InterruptedException e) {
             log.error("Exception: ", e);
         }
-        String message = "%s%.2f\n%s%d\n%s%d";
+        String message = "%s<b>%.2f</b>\n%s<b>%d</b>\n%s<b>%d</b>";
         telegramService.sendMessage(dispatchRequest.getChatId(), String.format(message, commonWeight, weight, seatsAmount, seats, palletsQuantity, pallets));
     }
 

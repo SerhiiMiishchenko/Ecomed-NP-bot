@@ -19,21 +19,11 @@ public class InternetDocumentResponse {
     private List<String> warningCodes;
     private List<String> infoCodes;
 
-    public static class ResultData {
+    public record ResultData(List<InternetDocument> result) {
 
-        private List<InternetDocument> result;
-
-        public List<InternetDocument> getResult() {
-            return result;
-        }
     }
 
-    public static class Info {
-        private int totalCount;
-
-        public int getTotalCount() {
-            return totalCount;
-        }
+    public record Info(int totalCount) {
 
     }
 }

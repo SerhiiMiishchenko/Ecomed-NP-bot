@@ -6,19 +6,16 @@ import com.github.mishchuk7.ecomednpbot.v1.client.InternetDocumentManagerImpl;
 import com.github.mishchuk7.ecomednpbot.v1.enums.TrackingStatusColor;
 import com.github.mishchuk7.ecomednpbot.v1.helper.KeyboardHelper;
 import com.github.mishchuk7.ecomednpbot.v1.model.InternetDocument;
-import com.github.mishchuk7.ecomednpbot.v1.model.MethodProperties;
 import com.github.mishchuk7.ecomednpbot.v1.model.SearchRequest;
 import com.github.mishchuk7.ecomednpbot.v1.model.UserRequest;
 import com.github.mishchuk7.ecomednpbot.v1.service.TelegramService;
+import com.github.mishchuk7.ecomednpbot.v1.util.SearchRequestUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
-
-import static com.github.mishchuk7.ecomednpbot.v1.client.InternetDocumentManager.calledMethod;
-import static com.github.mishchuk7.ecomednpbot.v1.client.InternetDocumentManager.modelName;
 
 @Slf4j
 @Component
@@ -40,12 +37,7 @@ public class TextEnteredHandler extends UserRequestHandler {
         String userInput = dispatchRequest.getUpdate().getMessage().getText();
         String searchData = parseInputString(userInput);
         DocumentManager<InternetDocument> internetDocumentManager = new InternetDocumentManagerImpl(documentManagerConfig);
-        SearchRequest searchRequest = SearchRequest.builder()
-                .apiKey(documentManagerConfig.getApiKey())
-                .calledMethod(calledMethod.getValue())
-                .modelName(modelName.getValue())
-                .methodProperties(new MethodProperties(searchData))
-                .build();
+        SearchRequest searchRequest = SearchRequestUtils.createSearchRequestInternetDoc(searchData, documentManagerConfig);
         try {
             List<InternetDocument> internetDocuments = internetDocumentManager.getAllDocuments(searchRequest);
             String notFound = "Відправлень не знайдено";

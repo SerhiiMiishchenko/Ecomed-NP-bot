@@ -36,17 +36,6 @@ public class MethodProperties {
         this.findByData = findByData;
     }
 
-    public MethodProperties(String findByData, int limit) {
-        this.findByData = findByData;
-        this.limit = limit;
-    }
-
-    public MethodProperties(String findByData, int page, int limit) {
-        this.findByData = findByData;
-        this.page = page;
-        this.limit = limit;
-    }
-
     public MethodProperties(List<Document> documents) {
         this.documents = documents;
     }

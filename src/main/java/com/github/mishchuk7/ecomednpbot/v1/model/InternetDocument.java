@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mishchuk7.ecomednpbot.v1.enums.CargoType;
 import com.github.mishchuk7.ecomednpbot.v1.enums.TrackingStatusColor;
-import lombok.Data;
 import com.github.mishchuk7.ecomednpbot.v1.util.OutputHelper;
+import lombok.Data;
 
 import java.util.List;
 
@@ -244,7 +244,7 @@ public class InternetDocument {
         return "<b>Відправлення:</b> " + "<u>" + number + "</u>" +
                 "\n<b>Дата створення:</b> " + OutputHelper.formatDateTime(dateTime) +
                 "\n<b>Статус:</b> " + trackingStatusName + TrackingStatusColor.getStatusColor(trackingStatusCode).getColor() +
-                correctDateOutput() +
+                dateOutputDependingOnDeliveryStatus() +
                 "\n<b>Тип відправлення:</b> " + CargoType.descriptionOf(getCargoType()) +
                 "\n<b>Кількість місць:</b> " + seatsAmount +
                 "\n<b>Вага:</b> " + documentWeight +
@@ -258,7 +258,7 @@ public class InternetDocument {
                 "\n" + phoneRecipient + "\n";
     }
 
-    private String correctDateOutput() {
+    private String dateOutputDependingOnDeliveryStatus() {
 
         return switch (trackingStatusCode) {
             case 7 -> "\n<b>Дата прибуття: </b>" + OutputHelper.formatDateTime(getArrivalDateTime());

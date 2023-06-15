@@ -24,6 +24,6 @@ public enum PaymentMethod {
         for (PaymentMethod payment: values()) {
             if (payment.getRef().equalsIgnoreCase(method)) return payment.getDescription();
         }
-        return "-";//TODO add exception?
+        return "";
     }
 }

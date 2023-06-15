@@ -41,10 +41,6 @@ public enum TrackingStatusCode {
         return id;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public TrackingStatusColor getColor() {
         return color;
     }
