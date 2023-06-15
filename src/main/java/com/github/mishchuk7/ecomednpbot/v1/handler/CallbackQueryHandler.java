@@ -71,7 +71,7 @@ public class CallbackQueryHandler extends UserRequestHandler {
                 return internetDocument.toString();
             }
             TrackingDocument trackingDocument = trackingDocuments.get(0);
-            return internetDocument.toString() + trackingDocument.toString();
+            return internetDocument + trackingDocument.toString();
         }
 
         String header = String.format("%-35s %4s %-34s", "<b>Номер</b>", "<b>Ст </b>", "<b> Дата ств.</b>");
