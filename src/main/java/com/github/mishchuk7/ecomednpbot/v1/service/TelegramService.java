@@ -7,7 +7,6 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Slf4j
@@ -34,6 +33,7 @@ public class TelegramService {
         execute(message);
     }
 
+    @SuppressWarnings("rawtypes")
     private void execute(BotApiMethod botApiMethod) {
         try {
             ecomedNpBotSender.execute(botApiMethod);

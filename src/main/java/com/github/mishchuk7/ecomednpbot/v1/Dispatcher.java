@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class Dispatcher {
@@ -17,7 +16,7 @@ public class Dispatcher {
     public Dispatcher(List<UserRequestHandler> handlers) {
         this.handlers = handlers.stream()
                 .sorted(Comparator.comparing(UserRequestHandler::isGlobal).reversed())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public boolean dispatch(UserRequest userRequest) {

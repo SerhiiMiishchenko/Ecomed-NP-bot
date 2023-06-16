@@ -3,6 +3,7 @@ package com.github.mishchuk7.ecomednpbot.v1.client;
 import com.github.mishchuk7.ecomednpbot.v1.enums.CargoType;
 import com.github.mishchuk7.ecomednpbot.v1.enums.TrackingStatusCode;
 import com.github.mishchuk7.ecomednpbot.v1.enums.TypeOfDocument;
+import com.github.mishchuk7.ecomednpbot.v1.exception.EcomedNpTelegramBotException;
 import com.github.mishchuk7.ecomednpbot.v1.model.*;
 import com.github.mishchuk7.ecomednpbot.v1.util.HttpRequestUtils;
 import com.github.mishchuk7.ecomednpbot.v1.util.SearchRequestUtils;
@@ -13,14 +14,13 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class InternetDocumentManagerImpl implements InternetDocumentManager {
 
-    private final static int BRANCH_NUMBER = 66;
+    private static final int BRANCH_NUMBER = 66;
 
     private final DocumentManagerConfig documentManagerConfig;
 
@@ -31,7 +31,7 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
         return internetDocumentResponse.getData().stream()
                 .map(InternetDocumentResponse.ResultData::result)
                 .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -76,7 +76,9 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
                     try {
                         return new TrackingDocumentManagerImpl(documentManagerConfig).getAllDocuments(searchRequest);
                     } catch (IOException | InterruptedException e) {
-                        throw new RuntimeException(e);
+                        log.warn("Interrupted", e);
+                        Thread.currentThread().interrupt();
+                        throw new EcomedNpTelegramBotException("SearchRequest create error", e);
                     }
                 })
                 .flatMap(Collection::stream)
