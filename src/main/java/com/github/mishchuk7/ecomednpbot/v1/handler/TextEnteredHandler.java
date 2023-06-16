@@ -33,16 +33,24 @@ public class TextEnteredHandler extends UserRequestHandler {
 
     @Override
     public void handle(UserRequest dispatchRequest) {
+        String notFound = "Відправлень не знайдено";
         String message;
         String userInput = dispatchRequest.getUpdate().getMessage().getText();
         String searchData = parseInputString(userInput);
+        if (searchData.isEmpty()) {
+            telegramService.sendMessage(dispatchRequest.getChatId(), notFound);
+            return;
+        }
         DocumentManager<InternetDocument> internetDocumentManager = new InternetDocumentManagerImpl(documentManagerConfig);
         SearchRequest searchRequest = SearchRequestUtils.createSearchRequestInternetDoc(searchData, documentManagerConfig);
         try {
             List<InternetDocument> internetDocuments = internetDocumentManager.getAllDocuments(searchRequest);
-            String notFound = "Відправлень не знайдено";
             message = internetDocuments.isEmpty() ? notFound : getNumberAndStatusOfDocument(internetDocuments.get(0));
-            telegramService.sendMessage(dispatchRequest.getChatId(), message, keyboardHelper.buildSearchMenu(searchData));
+            if (message.equals(notFound)) {
+                telegramService.sendMessage(dispatchRequest.getChatId(), message);
+            } else {
+                telegramService.sendMessage(dispatchRequest.getChatId(), message, keyboardHelper.buildSearchMenu(searchData));
+            }
         } catch (IOException | InterruptedException e) {
             log.error("Exception: ", e);
         }
@@ -55,10 +63,8 @@ public class TextEnteredHandler extends UserRequestHandler {
     }
 
     private static String parseInputString(String input) {
-
         String digits = extractDigits(input);
         String letters = extractLetters(input);
-
         return digits.isEmpty() ? letters : digits;
     }
 
@@ -74,6 +80,7 @@ public class TextEnteredHandler extends UserRequestHandler {
     }
 
     private static String extractLetters(String input) {
+        if (input.matches("[a-zA-Z]")) return "";
         String s = input.replaceAll("\\p{Punct}", "");
         String[] words = s.trim().split("\\s+");
         return words.length > 0 ? words[0].replaceAll("\\P{IsCyrillic}", "") : "";
