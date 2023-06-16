@@ -10,6 +10,10 @@ import java.util.List;
 
 public class SearchRequestUtils {
 
+    private SearchRequestUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static SearchRequest createSearchRequestInternetDoc(String searchData, DocumentManagerConfig documentManagerConfig) {
         return SearchRequest.builder()
                 .apiKey(documentManagerConfig.getApiKey())

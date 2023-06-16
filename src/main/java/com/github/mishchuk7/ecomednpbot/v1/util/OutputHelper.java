@@ -13,6 +13,10 @@ public class OutputHelper {
     private static final DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
+    private OutputHelper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String formatOverdueParcel(TrackingDocument overdueParcel) {
         return "<b>Відправлення:</b> " + overdueParcel.getNumber()
                 + "\n<b>Платне зберігання з:</b> " + overdueParcel.getDateFirstDayStorage()
