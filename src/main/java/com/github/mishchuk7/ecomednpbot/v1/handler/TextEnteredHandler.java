@@ -53,6 +53,7 @@ public class TextEnteredHandler extends UserRequestHandler {
             }
         } catch (IOException | InterruptedException e) {
             log.error("Exception: ", e);
+            Thread.currentThread().interrupt();
         }
 
     }

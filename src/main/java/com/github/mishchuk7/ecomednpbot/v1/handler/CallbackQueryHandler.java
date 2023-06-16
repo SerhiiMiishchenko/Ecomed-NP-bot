@@ -41,6 +41,7 @@ public class CallbackQueryHandler extends UserRequestHandler {
             telegramService.sendMessage(dispatchRequest.getChatId(), message);
         } catch (IOException | InterruptedException e) {
             log.error("Exception: ", e);
+            Thread.currentThread().interrupt();
         }
     }
 

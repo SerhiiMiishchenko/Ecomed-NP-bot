@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WeightCommandHandler extends UserRequestHandler{
 
-    private static final String command = "/weight";
+    private static final String WEIGHT = "/weight";
 
     @Value("${BASE_PHONE_NUMBER}")
     private String baseNumber;
@@ -33,7 +33,7 @@ public class WeightCommandHandler extends UserRequestHandler{
 
     @Override
     public boolean isApplicable(UserRequest request) {
-        return isCommand(request.getUpdate(), command);
+        return isCommand(request.getUpdate(), WEIGHT);
     }
 
     @Override
@@ -52,7 +52,8 @@ public class WeightCommandHandler extends UserRequestHandler{
             pallets = internetDocumentManager.getQuantityOfPallet(internetDocuments);
             seats = internetDocumentManager.getTotalNumberOfSeats(internetDocuments);
         } catch (IOException | InterruptedException e) {
-            log.error("Exception: ", e);
+            log.warn("Interrupted!", e);
+            Thread.currentThread().interrupt();
         }
         String message = "%s<b>%.2f</b>\n%s<b>%d</b>\n%s<b>%d</b>";
         telegramService.sendMessage(dispatchRequest.getChatId(), String.format(message, commonWeight, weight, seatsAmount, seats, palletsQuantity, pallets));

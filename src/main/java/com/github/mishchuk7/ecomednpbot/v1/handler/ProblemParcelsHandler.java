@@ -3,6 +3,7 @@ package com.github.mishchuk7.ecomednpbot.v1.handler;
 import com.github.mishchuk7.ecomednpbot.v1.client.*;
 import com.github.mishchuk7.ecomednpbot.v1.enums.TrackingStatusCode;
 import com.github.mishchuk7.ecomednpbot.v1.enums.TypeOfDocument;
+import com.github.mishchuk7.ecomednpbot.v1.exception.EcomedNpTelegramBotException;
 import com.github.mishchuk7.ecomednpbot.v1.model.*;
 import com.github.mishchuk7.ecomednpbot.v1.service.TelegramService;
 import com.github.mishchuk7.ecomednpbot.v1.util.OutputHelper;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProblemParcelsHandler extends UserRequestHandler {
 
-    private static final String command = "/problem";
+    private static final String PROBLEM = "/problem";
 
     @Value("${BASE_PHONE_NUMBER}")
     private String baseNumber;
@@ -32,7 +33,7 @@ public class ProblemParcelsHandler extends UserRequestHandler {
 
     @Override
     public boolean isApplicable(UserRequest request) {
-        return isCommand(request.getUpdate(), command);
+        return isCommand(request.getUpdate(), PROBLEM);
     }
 
     @Override
@@ -54,7 +55,8 @@ public class ProblemParcelsHandler extends UserRequestHandler {
                 telegramService.sendMessage(dispatchRequest.getChatId(), sb.toString());
             }
         } catch (IOException | InterruptedException e) {
-            log.error("Exception: ", e);
+            log.warn("Interrupted!", e);
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -74,7 +76,9 @@ public class ProblemParcelsHandler extends UserRequestHandler {
                     try {
                         return new TrackingDocumentManagerImpl(documentManagerConfig).getAllDocuments(searchRequest);
                     } catch (IOException | InterruptedException e) {
-                        throw new RuntimeException(e);
+                        log.warn("Interrupted!", e);
+                        Thread.currentThread().interrupt();
+                        throw new EcomedNpTelegramBotException("Search request create error" ,e);
                     }
                 })
                 .flatMap(Collection::stream)

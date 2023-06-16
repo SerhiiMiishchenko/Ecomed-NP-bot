@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StartCommandHandler extends UserRequestHandler {
 
-    private static final String command = "/start";
+    private static final String START = "/start";
 
     private final TelegramService telegramService;
 
     @Override
     public boolean isApplicable(UserRequest request) {
-        return isCommand(request.getUpdate(), command);
+        return isCommand(request.getUpdate(), START);
     }
 
     @Override

@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class HelpCommandHandler extends UserRequestHandler {
 
-    private static final String command = "/help";
+    private static final String HELP = "/help";
 
     private final TelegramService telegramService;
 
 
     @Override
     public boolean isApplicable(UserRequest request) {
-        return isCommand(request.getUpdate(), command);
+        return isCommand(request.getUpdate(), HELP);
     }
 
     @Override
