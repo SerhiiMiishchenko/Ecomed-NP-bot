@@ -2,6 +2,7 @@ package com.github.mishchuk7.ecomednpbot.v1.client;
 
 import com.github.mishchuk7.ecomednpbot.v1.enums.CargoType;
 import com.github.mishchuk7.ecomednpbot.v1.enums.TrackingStatusCode;
+import com.github.mishchuk7.ecomednpbot.v1.enums.TypeOfDocument;
 import com.github.mishchuk7.ecomednpbot.v1.model.*;
 import com.github.mishchuk7.ecomednpbot.v1.util.HttpRequestUtils;
 import com.github.mishchuk7.ecomednpbot.v1.util.SearchRequestUtils;
@@ -67,6 +68,7 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
 
     private List<TrackingDocument> trackingDocuments(List<InternetDocument> internetDocuments) {
         return internetDocuments.stream()
+                .filter(document -> document.getTypeOfDocument().equalsIgnoreCase(TypeOfDocument.INCOMING.getDescription()))
                 .filter(document -> document.getTrackingStatusCode() == TrackingStatusCode.ARRIVED_AT_BRANCH.getId())
                 .map(document -> new MethodProperties.Document(document.getNumber(), document.getPhoneSender()))
                 .map(document -> SearchRequestUtils.createSearchRequestTrackingDoc(document, documentManagerConfig))
