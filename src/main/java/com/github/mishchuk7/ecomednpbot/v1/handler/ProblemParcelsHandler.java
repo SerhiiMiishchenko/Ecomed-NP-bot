@@ -1,8 +1,6 @@
 package com.github.mishchuk7.ecomednpbot.v1.handler;
 
 import com.github.mishchuk7.ecomednpbot.v1.client.*;
-import com.github.mishchuk7.ecomednpbot.v1.enums.TrackingStatusCode;
-import com.github.mishchuk7.ecomednpbot.v1.enums.TypeOfDocument;
 import com.github.mishchuk7.ecomednpbot.v1.exception.EcomedNpTelegramBotException;
 import com.github.mishchuk7.ecomednpbot.v1.model.*;
 import com.github.mishchuk7.ecomednpbot.v1.service.TelegramService;
@@ -14,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class ProblemParcelsHandler extends UserRequestHandler {
             SearchRequest searchRequestInternetDoc = SearchRequestUtils.createSearchRequestInternetDoc(baseNumber, documentManagerConfig);
 
             List<InternetDocument> internetDocuments = internetDocumentManager.getAllDocuments(searchRequestInternetDoc);
-            List<TrackingDocument> problemParcels = trackingDocumentManager.getProblemParcels(trackingDocuments(internetDocuments));
+            List<TrackingDocument> problemParcels = trackingDocumentManager.getProblemParcels(receiveOverdueParcels(internetDocuments));
 
             String message = "Проблемних відправлень не знайдено";
             StringBuilder sb = new StringBuilder();
@@ -66,10 +66,10 @@ public class ProblemParcelsHandler extends UserRequestHandler {
         return false;
     }
 
-    private List<TrackingDocument> trackingDocuments(List<InternetDocument> internetDocuments) {
+    private List<TrackingDocument> receiveOverdueParcels(List<InternetDocument> internetDocuments) {
         return internetDocuments.stream()
-                .filter(document -> document.getTypeOfDocument().equalsIgnoreCase(TypeOfDocument.INCOMING.getDescription()))
-                .filter(document -> document.getTrackingStatusCode() == TrackingStatusCode.ARRIVED_AT_BRANCH.getId())
+                .filter(document -> !document.getFirstDayStorage().isEmpty())
+                .filter(document -> isDateBeforeOrEqualToCurrentDate(document.getFirstDayStorage()))
                 .map(document -> new MethodProperties.Document(document.getNumber(), document.getPhoneSender()))
                 .map(document -> SearchRequestUtils.createSearchRequestTrackingDoc(document, documentManagerConfig))
                 .map(searchRequest -> {
@@ -83,6 +83,15 @@ public class ProblemParcelsHandler extends UserRequestHandler {
                 })
                 .flatMap(Collection::stream)
                 .toList();
+    }
+
+    private static boolean isDateBeforeOrEqualToCurrentDate(String dateString) {
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime providedDate = LocalDateTime.parse(dateString, formatter);
+
+        return providedDate.isEqual(currentDate) || providedDate.isBefore(currentDate);
     }
 
 }
