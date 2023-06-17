@@ -2,7 +2,6 @@ package com.github.mishchuk7.ecomednpbot.v1.client;
 
 import com.github.mishchuk7.ecomednpbot.v1.enums.CargoType;
 import com.github.mishchuk7.ecomednpbot.v1.enums.TrackingStatusCode;
-import com.github.mishchuk7.ecomednpbot.v1.enums.TypeOfDocument;
 import com.github.mishchuk7.ecomednpbot.v1.exception.EcomedNpTelegramBotException;
 import com.github.mishchuk7.ecomednpbot.v1.model.*;
 import com.github.mishchuk7.ecomednpbot.v1.util.HttpRequestUtils;
@@ -36,7 +35,7 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
 
     @Override
     public double getTotalWeightOfParcelsAtBranch(List<InternetDocument> internetDocuments) {
-        List<TrackingDocument> trackingDocuments = trackingDocuments(internetDocuments);
+        List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments);
         return receiveArrivedAtBranchParcels(trackingDocuments).stream()
                 .mapToDouble(TrackingDocument::getDocumentWeight)
                 .sum();
@@ -44,7 +43,7 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
 
     @Override
     public int getQuantityOfPallet(List<InternetDocument> internetDocuments) {
-        List<TrackingDocument> trackingDocuments = trackingDocuments(internetDocuments);
+        List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments);
         return receiveArrivedAtBranchParcels(trackingDocuments).stream()
                 .filter(document -> document.getCargoType().equalsIgnoreCase(CargoType.PALLET.getRef()))
                 .mapToInt(TrackingDocument::getSeatsAmount)
@@ -53,7 +52,7 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
 
     @Override
     public int getTotalNumberOfSeats(List<InternetDocument> internetDocuments) {
-        List<TrackingDocument> trackingDocuments = trackingDocuments(internetDocuments);
+        List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments);
         return receiveArrivedAtBranchParcels(trackingDocuments).stream()
                 .mapToInt(TrackingDocument::getSeatsAmount)
                 .sum();
@@ -66,9 +65,10 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
                 .toList();
     }
 
-    private List<TrackingDocument> trackingDocuments(List<InternetDocument> internetDocuments) {
+    private List<TrackingDocument> receiveParcelsArrivedAtBranch(List<InternetDocument> internetDocuments) {
         return internetDocuments.stream()
-                .filter(document -> document.getTypeOfDocument().equalsIgnoreCase(TypeOfDocument.INCOMING.getDescription()))
+                .filter(document -> "Київ".equals(document.getCityRecipientDescription())
+                        && document.getRecipientAddressDescription().contains(String.valueOf(BRANCH_NUMBER)))
                 .filter(document -> document.getTrackingStatusCode() == TrackingStatusCode.ARRIVED_AT_BRANCH.getId())
                 .map(document -> new MethodProperties.Document(document.getNumber(), document.getPhoneSender()))
                 .map(document -> SearchRequestUtils.createSearchRequestTrackingDoc(document, documentManagerConfig))
