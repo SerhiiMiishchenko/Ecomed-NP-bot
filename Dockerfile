@@ -6,4 +6,6 @@ COPY mvnw pom.xml ./
 RUN ./mvnw dependency:resolve
 COPY src ./src
 CMD ["./mvnw", "spring-boot:run"]
+ENV FLY_API_HOSTNAME="https://api.machines.dev"
+
 
