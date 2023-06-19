@@ -21,7 +21,7 @@ public class MethodProperties {
     private int page = 0;
 
     @JsonProperty("Limit")
-    private int limit = 50;
+    private int limit = 300;
 
     @JsonProperty("DateFrom")
     private final String dateFrom = LocalDate.now().minusMonths(3L).format(formatter);
