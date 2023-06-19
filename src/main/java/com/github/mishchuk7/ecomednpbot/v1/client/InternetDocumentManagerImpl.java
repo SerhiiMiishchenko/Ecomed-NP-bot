@@ -36,7 +36,7 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
     @Override
     public double getTotalWeightOfParcelsAtBranch(List<InternetDocument> internetDocuments) {
         List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments);
-        return receiveArrivedAtBranchParcels(trackingDocuments).stream()
+        return receiveArrivedParcels(trackingDocuments).stream()
                 .mapToDouble(TrackingDocument::getDocumentWeight)
                 .sum();
     }
@@ -44,7 +44,7 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
     @Override
     public int getQuantityOfPallet(List<InternetDocument> internetDocuments) {
         List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments);
-        return receiveArrivedAtBranchParcels(trackingDocuments).stream()
+        return receiveArrivedParcels(trackingDocuments).stream()
                 .filter(document -> document.getCargoType().equalsIgnoreCase(CargoType.PALLET.getRef()))
                 .mapToInt(TrackingDocument::getSeatsAmount)
                 .sum();
@@ -53,12 +53,14 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
     @Override
     public int getTotalNumberOfSeats(List<InternetDocument> internetDocuments) {
         List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments);
-        return receiveArrivedAtBranchParcels(trackingDocuments).stream()
+        return receiveArrivedParcels(trackingDocuments).stream()
                 .mapToInt(TrackingDocument::getSeatsAmount)
                 .sum();
     }
 
-    private List<TrackingDocument> receiveArrivedAtBranchParcels(List<TrackingDocument> trackingDocuments) {
+
+
+    private List<TrackingDocument> receiveArrivedParcels(List<TrackingDocument> trackingDocuments) {
         return trackingDocuments.stream()
                 .filter(document -> document.getWarehouseRecipientNumber() == BRANCH_NUMBER)
                 .filter(document -> document.getStatusCode() == TrackingStatusCode.ARRIVED_AT_BRANCH.getId())

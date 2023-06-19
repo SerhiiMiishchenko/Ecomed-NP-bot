@@ -63,4 +63,5 @@ public class WeightCommandHandler extends UserRequestHandler{
     public boolean isGlobal() {
         return true;
     }
+
 }
