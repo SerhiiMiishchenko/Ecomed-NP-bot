@@ -7,6 +7,8 @@ RUN chmod +x ./mvnw
 RUN ./mvnw dependency:resolve
 COPY src ./src
 CMD ["./mvnw", "spring-boot:run"]
-#ENV FLY_API_HOSTNAME="https://api.machines.dev"
+EXPOSE 80/tcp
+EXPOSE 443/tcp
+
 
 
