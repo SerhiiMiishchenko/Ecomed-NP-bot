@@ -8,7 +8,6 @@ RUN ./mvnw dependency:resolve
 COPY src ./src
 CMD ["./mvnw", "spring-boot:run"]
 EXPOSE 80/tcp
-EXPOSE 443/tcp
 
 
 
