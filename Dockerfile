@@ -4,8 +4,9 @@ WORKDIR /app
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 RUN ./mvnw dependency:resolve
+RUN chmod +x ./mvnw
 COPY src ./src
-CMD ["chmod +x ./mvnw", "spring-boot:run"]
+CMD ["./mvnw", "spring-boot:run"]
 ENV FLY_API_HOSTNAME="https://api.machines.dev"
 
 
