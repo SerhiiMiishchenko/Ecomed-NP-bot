@@ -263,8 +263,7 @@ public class InternetDocument {
         return switch (trackingStatusCode) {
             case 7 -> "\n<b>Дата прибуття: </b>" + OutputHelper.formatDateTime(getArrivalDateTime());
             case 9 -> "\n<b>Дата отримання: </b>" + OutputHelper.formatDateTime(getReceivingDateTime());
-            default ->
-                    "\n<b>Орієнтовна дата прибуття: </b>" + OutputHelper.formatDateTime(getScheduledDeliveryDate());
+            default -> "\n<b>Орієнтовна дата прибуття: </b>" + OutputHelper.formatDateTime(getScheduledDeliveryDate());
         };
     }
 

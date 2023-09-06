@@ -78,7 +78,7 @@ public class ProblemParcelsHandler extends UserRequestHandler {
                     } catch (IOException | InterruptedException e) {
                         log.warn("Interrupted!", e);
                         Thread.currentThread().interrupt();
-                        throw new EcomedNpTelegramBotException("Search request create error" ,e);
+                        throw new EcomedNpTelegramBotException("Search request create error", e);
                     }
                 })
                 .flatMap(Collection::stream)

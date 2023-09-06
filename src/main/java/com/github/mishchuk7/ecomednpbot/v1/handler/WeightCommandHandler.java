@@ -20,9 +20,12 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WeightCommandHandler extends UserRequestHandler{
+public class WeightCommandHandler extends UserRequestHandler {
 
     private static final String WEIGHT = "/weight";
+    private static final int BRANCH_NUMBER = 66;
+    private static final String CITY = "Київ";
+
 
     @Value("${BASE_PHONE_NUMBER}")
     private String baseNumber;
@@ -48,9 +51,9 @@ public class WeightCommandHandler extends UserRequestHandler{
             InternetDocumentManager internetDocumentManager = new InternetDocumentManagerImpl(documentManagerConfig);
             SearchRequest searchRequest = SearchRequestUtils.createSearchRequestInternetDoc(baseNumber, documentManagerConfig);
             List<InternetDocument> internetDocuments = internetDocumentManager.getAllDocuments(searchRequest);
-            weight = internetDocumentManager.getTotalWeightOfParcelsAtBranch(internetDocuments);
-            pallets = internetDocumentManager.getQuantityOfPallet(internetDocuments);
-            seats = internetDocumentManager.getTotalNumberOfSeats(internetDocuments);
+            weight = internetDocumentManager.getTotalWeightOfParcelsAtBranch(internetDocuments, CITY, BRANCH_NUMBER);
+            pallets = internetDocumentManager.getQuantityOfPallet(internetDocuments, CITY, BRANCH_NUMBER);
+            seats = internetDocumentManager.getTotalNumberOfSeats(internetDocuments, CITY, BRANCH_NUMBER);
         } catch (IOException | InterruptedException e) {
             log.warn("Interrupted!", e);
             Thread.currentThread().interrupt();

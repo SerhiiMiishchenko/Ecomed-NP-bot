@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InternetDocumentManagerImpl implements InternetDocumentManager {
 
-    private static final int BRANCH_NUMBER = 66;
 
     private final DocumentManagerConfig documentManagerConfig;
 
@@ -34,43 +33,34 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
     }
 
     @Override
-    public double getTotalWeightOfParcelsAtBranch(List<InternetDocument> internetDocuments) {
-        List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments);
-        return receiveArrivedParcels(trackingDocuments).stream()
+    public double getTotalWeightOfParcelsAtBranch(List<InternetDocument> internetDocuments, String city, int branchNumber) {
+        List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments, city, branchNumber);
+        return trackingDocuments.stream()
                 .mapToDouble(TrackingDocument::getDocumentWeight)
                 .sum();
     }
 
     @Override
-    public int getQuantityOfPallet(List<InternetDocument> internetDocuments) {
-        List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments);
-        return receiveArrivedParcels(trackingDocuments).stream()
+    public int getQuantityOfPallet(List<InternetDocument> internetDocuments, String city, int branchNumber) {
+        List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments, city, branchNumber);
+        return trackingDocuments.stream()
                 .filter(document -> document.getCargoType().equalsIgnoreCase(CargoType.PALLET.getRef()))
                 .mapToInt(TrackingDocument::getSeatsAmount)
                 .sum();
     }
 
     @Override
-    public int getTotalNumberOfSeats(List<InternetDocument> internetDocuments) {
-        List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments);
-        return receiveArrivedParcels(trackingDocuments).stream()
+    public int getTotalNumberOfSeats(List<InternetDocument> internetDocuments, String city, int branchNumber) {
+        List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments, city, branchNumber);
+        return trackingDocuments.stream()
                 .mapToInt(TrackingDocument::getSeatsAmount)
                 .sum();
     }
 
-
-
-    private List<TrackingDocument> receiveArrivedParcels(List<TrackingDocument> trackingDocuments) {
-        return trackingDocuments.stream()
-                .filter(document -> document.getWarehouseRecipientNumber() == BRANCH_NUMBER)
-                .filter(document -> document.getStatusCode() == TrackingStatusCode.ARRIVED_AT_BRANCH.getId())
-                .toList();
-    }
-
-    private List<TrackingDocument> receiveParcelsArrivedAtBranch(List<InternetDocument> internetDocuments) {
+    private List<TrackingDocument> receiveParcelsArrivedAtBranch(List<InternetDocument> internetDocuments, String city, int branchNumber) {
         return internetDocuments.stream()
-                .filter(document -> "Київ".equals(document.getCityRecipientDescription())
-                        && document.getRecipientAddressDescription().contains(String.valueOf(BRANCH_NUMBER)))
+                .filter(document -> city.equals(document.getCityRecipientDescription())
+                        && document.getRecipientAddressDescription().contains(String.valueOf(branchNumber)))
                 .filter(document -> document.getTrackingStatusCode() == TrackingStatusCode.ARRIVED_AT_BRANCH.getId())
                 .map(document -> new MethodProperties.Document(document.getNumber(), document.getPhoneSender()))
                 .map(document -> SearchRequestUtils.createSearchRequestTrackingDoc(document, documentManagerConfig))

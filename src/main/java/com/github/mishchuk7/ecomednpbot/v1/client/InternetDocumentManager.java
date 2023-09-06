@@ -11,10 +11,10 @@ public interface InternetDocumentManager extends DocumentManager<InternetDocumen
     ModelName modelName = ModelName.INTERNET_DOCUMENT;
     CalledMethod calledMethod = CalledMethod.FIND_DOCUMENT_BY_DATA;
 
-    double getTotalWeightOfParcelsAtBranch(List<InternetDocument> internetDocuments);
+    double getTotalWeightOfParcelsAtBranch(List<InternetDocument> internetDocuments, String city, int branchNumber);
 
-    int getQuantityOfPallet(List<InternetDocument> internetDocuments);
+    int getQuantityOfPallet(List<InternetDocument> internetDocuments, String city, int branchNumber);
 
-    int getTotalNumberOfSeats(List<InternetDocument> internetDocuments);
+    int getTotalNumberOfSeats(List<InternetDocument> internetDocuments, String city, int branchNumber);
 
 }

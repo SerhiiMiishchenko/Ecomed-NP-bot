@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface DocumentManager<T> {
 
-    List<T> getAllDocuments(SearchRequest searchRequest)  throws IOException, InterruptedException ;
+    List<T> getAllDocuments(SearchRequest searchRequest) throws IOException, InterruptedException;
 
 }

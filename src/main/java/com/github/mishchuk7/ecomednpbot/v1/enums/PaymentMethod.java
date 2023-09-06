@@ -21,7 +21,7 @@ public enum PaymentMethod {
     }
 
     public static String descriptionOf(String method) {
-        for (PaymentMethod payment: values()) {
+        for (PaymentMethod payment : values()) {
             if (payment.getRef().equalsIgnoreCase(method)) return payment.getDescription();
         }
         return "";
