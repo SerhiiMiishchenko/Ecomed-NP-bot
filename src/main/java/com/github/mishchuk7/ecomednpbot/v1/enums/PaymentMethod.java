@@ -1,5 +1,8 @@
 package com.github.mishchuk7.ecomednpbot.v1.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum PaymentMethod {
     NON_CASH("NonCash", "Безготівка"),
     CASH("Cash", "Готівка");
@@ -10,14 +13,6 @@ public enum PaymentMethod {
     PaymentMethod(String ref, String description) {
         this.ref = ref;
         this.description = description;
-    }
-
-    public String getRef() {
-        return ref;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public static String descriptionOf(String method) {
