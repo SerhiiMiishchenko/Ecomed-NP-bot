@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -35,6 +36,8 @@ public class InternetDocumentManagerImpl implements InternetDocumentManager {
     @Override
     public double getTotalWeightOfParcelsAtBranch(List<InternetDocument> internetDocuments, String city, int branchNumber) {
         List<TrackingDocument> trackingDocuments = receiveParcelsArrivedAtBranch(internetDocuments, city, branchNumber);
+        String numbers = trackingDocuments.stream().map(t -> t.getNumber() + " : " + t.getDocumentWeight()).collect(Collectors.joining("; "));
+        log.info("List of arrived parcels: " + numbers);
         return trackingDocuments.stream()
                 .mapToDouble(TrackingDocument::getDocumentWeight)
                 .sum();
