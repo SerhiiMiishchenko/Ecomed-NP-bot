@@ -1,3 +1,4 @@
+
 FROM amazoncorretto:17
 LABEL authors="Serhii Mishchenko"
 WORKDIR /app
@@ -8,7 +9,3 @@ RUN ./mvnw dependency:resolve
 COPY src ./src
 EXPOSE 8080/tcp
 CMD ["./mvnw", "spring-boot:run"]
-
-
-
-
